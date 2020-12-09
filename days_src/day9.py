@@ -24,8 +24,7 @@ def day9_2(numsInput, notValue):
         for j in range(i, len(numsInput)):
             rangedValue.append(numsInput[j])
             sum += numsInput[j]
-            if sum == notValue:
-                print(sum)
+
             if sum > notValue:
                 del rangedValue[:]
                 sum = 0
