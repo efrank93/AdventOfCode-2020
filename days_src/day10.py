@@ -28,15 +28,14 @@ def day10_1(joltageInput):
 
 def day10_2(joltageInput):
 
-    for i in range(3, len(joltageInput)):
-        paths = defaultdict(int)
-        paths[0] = 1
-        #for each adapter from the input, search if exists the next and the possible path with the other adapters inside the range
-        for adapter in joltageInput:
-            for diff in range(1, 4):
-                next_adapter = adapter + diff
-                if next_adapter in joltageInput:
-                    paths[next_adapter] += paths[adapter]        
+    paths = defaultdict(int)
+    paths[0] = 1
+    #for each adapter from the input, search if exists the next and the possible path with the other adapters inside the range
+    for adapter in joltageInput:
+        for diff in range(1, 4):
+            next_adapter = adapter + diff
+            if next_adapter in joltageInput:
+                paths[next_adapter] += paths[adapter]        
     
     print(paths[max(joltageInput)])    
     
