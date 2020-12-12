@@ -2,7 +2,7 @@ def main():
     with open('input_days/day12.txt', 'r') as input:
         paList = [line.strip() for line in input]
     
-    #day12_1(paList)
+    day12_1(paList)
     day12_2(paList)
     
 def day12_1(paList):
@@ -43,8 +43,7 @@ def day12_2(paList):
     for command in paList:
         action = command[0]
         value = int(command[1:])
-        print('----------------------------------')
-        print('action: ' + action + ' ' + str(value))
+
         if action == 'N':
             waypoint['y'] += value
         if action == 'S':
@@ -54,18 +53,11 @@ def day12_2(paList):
         if action == 'W':
             waypoint['x'] -= value        
         if action == 'R' or action == 'L':
-            #print(waypoint)
             waypoint = rotateW(action, value, waypoint)
 
         if action == 'F':
-            #print(waypoint)
             ship['x'] += waypoint['x'] * value
-            ship['y'] += waypoint['y'] * value
-            #print(ship)
-    
-        print(waypoint)
-        print(ship) 
-    
+            ship['y'] += waypoint['y'] * value    
                
     print(abs(ship['x'])+abs(ship['y']))  
     
