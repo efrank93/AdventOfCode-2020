@@ -2,7 +2,7 @@ def main():
     with open('input_days/day12.txt', 'r') as input:
         paList = [line.strip() for line in input]
     
-    day12_1(paList)
+    #day12_1(paList)
     day12_2(paList)
     
 def day12_1(paList):
@@ -39,11 +39,12 @@ def day12_1(paList):
 def day12_2(paList):
     waypoint = {'x': 10, 'y': 1}
     ship = {'x': 0, 'y': 0}
-    degree = 0
-    face = 'E'
+    
     for command in paList:
         action = command[0]
         value = int(command[1:])
+        print('----------------------------------')
+        print('action: ' + action + ' ' + str(value))
         if action == 'N':
             waypoint['y'] += value
         if action == 'S':
@@ -52,48 +53,48 @@ def day12_2(paList):
             waypoint['x'] += value
         if action == 'W':
             waypoint['x'] -= value        
-        if action == 'R':
-            face = rotateR(face, value)                       
-        if action == 'L':
-            face = rotateL(face, value)
-        
+        if action == 'R' or action == 'L':
+            #print(waypoint)
+            waypoint = rotateW(action, value, waypoint)
+
         if action == 'F':
-            if face == 'N':
-                #print(face)
-                #print(value)
-                #print(ship)
-                #print(waypoint)
-                ship['x'] += -waypoint['y'] * value 
-                ship['y'] += waypoint['x'] * value   
-                #print(ship)
-            if face == 'E':
-                #print(face)
-                #print(value)
-                #print(ship)
-                #print(waypoint)
-                ship['x'] += waypoint['x'] * value 
-                ship['y'] += waypoint['y'] * value 
-                #print(ship)
-            if face == 'S':
-                #print(face)
-                #print(value)
-                #print(ship)
-                #print(waypoint)
-                ship['x'] += waypoint['y'] * value 
-                ship['y'] += -waypoint['x'] * value
-                #print(ship)
-            if face == 'W':
-                #print(face)
-                #print(value)
-                #print(ship)
-                #print(waypoint)
-                ship['x'] += -waypoint['x'] * value   
-                ship['y'] += -waypoint['y'] * value 
-                #print(ship)
+            #print(waypoint)
+            ship['x'] += waypoint['x'] * value
+            ship['y'] += waypoint['y'] * value
+            #print(ship)
+    
+        print(waypoint)
+        print(ship) 
+    
+               
+    print(abs(ship['x'])+abs(ship['y']))  
+    
+def rotateW(action, value, waypoint):
+    if action == 'R':
+        if value == 90:
+            val = waypoint['x']*-1
+            waypoint = {'x': waypoint['y'], 'y': val}
+        if value == 180:
+            val = waypoint['x']*-1
+            val2 = waypoint['y']*-1
+            waypoint = {'x': val, 'y': val2}
+        if value == 270:
+            val = waypoint['y']*-1
+            waypoint = {'x': val, 'y': waypoint['x']}
+    if action == 'L':
+        if value == 90:
+            val = waypoint['y']*-1
+            waypoint = {'x': val, 'y': waypoint['x']}
+        if value == 180:
+            val = waypoint['x']*-1
+            val2 = waypoint['y']*-1
+            waypoint = {'x': val, 'y': val2}
+        if value == 270:
+            val = waypoint['x']*-1
+            waypoint = {'x': waypoint['y'], 'y': val}
             
-    print(ship)            
-    print(abs(ship['x'])+abs(ship['y']))   
-        
+    return waypoint
+    
 def rotateL(face, value):
     if face == 'N':
         if value == 90:
