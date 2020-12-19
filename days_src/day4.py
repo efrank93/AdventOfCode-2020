@@ -1,4 +1,3 @@
-from os import O_APPEND
 import re
 
 def main():
