@@ -32,10 +32,8 @@ def cupGame_1(cups, moves):
         cups = tempCups[:tempCups.index(destination)+1] + pickedUp  + tempCups[tempCups.index(destination)+1:] 
         
     result = cups
-        
-def getDestination(cup, Cups):
-    for i in range (0, cup):
-        if cup-1 in cups[:cups.index(cup)]
+
+
     
 
 if __name__ == "__main__":

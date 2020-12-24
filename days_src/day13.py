@@ -34,7 +34,7 @@ def day14_2(busList):
             offset.insert(v, v-maxOffset)
         
     cycle = True
-    timestamp = 0
+    timestamp = 99999999999507
     while cycle:
         timestamp += maxBus
         found = True

@@ -15,26 +15,27 @@ def main():
                 qty = re.findall('\d+', bags )[0]
                 color = re.findall('\D+', bags )[0].strip().split('bag')[0].strip()
                 colorBagQty[color] = qty
-        rulesBag[colorBag] = colorBagQty    
-    print(rulesBag)
-    shinyGoldRules = []
-    day7_1(rulesBag, shinyGoldRules)
-    day7_2(rulesBag, shinyGoldRules)
+                rulesBag[colorBag] = colorBagQty    
+            else: 
+                rulesBag[colorBag] = '0'
+        
+
+    #day7_1(rulesBag)
+    day7_2(rulesBag)
     
-def day7_1(rulesBag, shinyGoldRules):
+def day7_1(rulesBag):
+    shinyBag = []
     for rule in rulesBag:
         found = searchBag('shiny gold', rule, rulesBag)
         if found:
-            shinyGoldRules.append(rule)
+            shinyBag.append(rule)
             
-    print(len(shinyGoldRules))
+    print(len(shinyBag))
 
-def day7_2(rulesBag, shinyGoldRules):
-    count = 0
-
-        
-    print(shinyGoldRules)
-
+def day7_2(rulesBag):
+    count = number = 1
+    count = sumInsideBags('shiny gold', rulesBag, number, count)
+    print(count)
 
 def searchBag(searchColor, rule, rulesBag):
     colorInBag = list(rulesBag[rule].keys())
@@ -45,13 +46,23 @@ def searchBag(searchColor, rule, rulesBag):
         if color != rule:
             found = searchBag(searchColor, color, rulesBag)
         
-        if(found):
+        if found:
             return True
     
     return False
 
+def sumInsideBags(rule, rulesBag, number, count):
+    if rulesBag[rule] == '0':
+        count = count * int(number)
+        print(rulesBag[rule])
 
-    
+    else :
+        for rules in rulesBag[rule]:
+            print(rulesBag[rule])
+            count = int(rulesBag[rule][rules]) + sumInsideBags(rules, rulesBag, rulesBag[rule][rules], count)
+            
+    print(count)
+    return count
     
 if __name__ == "__main__":
     main()

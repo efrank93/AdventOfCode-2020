@@ -1,7 +1,7 @@
 def main():
     rules = {}
     myTicket = []
-    nearbyTicket = []
+    nearbyTicket = {}
     with open('input_days/day16.txt', 'r') as input:
         inputfile = input.read().split('\n\n')
         inputfile = [x.split('\n') for x in inputfile]
@@ -18,39 +18,46 @@ def main():
         myTicket1.append(int(val))
             
     inputfile[2].pop(0)
-    for line in inputfile[2]:
+    for i in range (0, len(inputfile[2])):
         ticket = []
-        li = line.split(',')
+        li = inputfile[2][i].split(',')
         for val in li:
             ticket.append(int(val))
             
-        nearbyTicket.append(ticket)
+        nearbyTicket[i] = ticket
         
+    day16_1(rules, myTicket1, nearbyTicket)
     day16_2(rules, myTicket1, nearbyTicket)
 
 def day16_1(rules, myTicket, nearbyTicket):
-    print(ticketValidator(nearbyTicket, rules))
+    nearbyTemp = nearbyTicket.copy()
+    count = 0
+    validTicket = False
+    for ticket in range(0, len(nearbyTemp)):
+        for column in range(0, len(myTicket)):
+            validTicket = validator(rules, column, nearbyTemp[ticket])
+            if not validTicket:
+                count += nearbyTicket[ticket][column]
+                nearbyTicket[ticket] = ''
+                break
+
+    print(count)
     
 def day16_2(rules, myTicket, nearbyTicket):
-    count = 1
-    validTicket = [] 
-    print(ticketValidator(nearbyTicket, rules))
+    validTicket = []
+    listTicket = {}
     
     for ticket in range (0, len(nearbyTicket)):
         if nearbyTicket[ticket] != '':
             validTicket.append(nearbyTicket[ticket])
             
-    vk = {}
-    listField = fieldAssignement(validTicket, rules)
-    sort_orders = sorted(listField.items(), key=lambda x: x[1])
+    for i in range(0, len(validTicket)):
+        listTicket[i] = validTicket[i]
+            
+    
+    listField = fieldAssignement(listTicket, rules)
+    print(listField)
 
-    for i in sort_orders:
-        vk[i[0]] = i[1]
-    l = list(vk.keys())
-    for i in range (0, len(l)):
-        if 'departure' in l[i]:
-            count *= int(myTicket[i])
-    print(count)
     
 def ticketValidator(nearbyTicket, rules):
     count = 0
@@ -74,23 +81,61 @@ def ticketValidator(nearbyTicket, rules):
             
     return count
 
+def validator(rules, column, ticket):
+    valid = False
+    for rule in rules:
+        val = int(ticket[column])
+        tor = rules[rule].split('or')
+        r1 = int(tor[0].strip().split('-')[0])
+        r2 = int(tor[0].strip().split('-')[1])
+        r3 = int(tor[1].strip().split('-')[0])
+        r4 = int(tor[1].strip().split('-')[1])
+        if r1 <= val <= r2 or r3 <= val <= r4:
+            valid = True
+            break
+            
+    return valid
+
+def columnValidator(ranges, column, nearbyTicket):
+    valid = False
+    for ticket in range(0, len(nearbyTicket)):        
+        val = nearbyTicket[ticket][column]
+        tor = ranges.split('or')
+        r1 = int(tor[0].strip().split('-')[0])
+        r2 = int(tor[0].strip().split('-')[1])
+        r3 = int(tor[1].strip().split('-')[0])
+        r4 = int(tor[1].strip().split('-')[1])
+        if r1 <= val <= r2 or r3 <= val <= r4:
+            valid = True
+        else:
+            return False
+            
+    return valid
+    
+
 def fieldAssignement(nearbyTicket, rules):
     fieldRule = {}
     rule = list(rules.keys())
-    while True:
-        for i in range (0, len(nearbyTicket[0])):
-            for r in range (0, len(rules)):
-                tor = rules[rule[r]].split('or')
-                r1 = int(tor[0].strip().split('-')[0])
-                r2 = int(tor[0].strip().split('-')[1])
-                r3 = int(tor[1].strip().split('-')[0])
-                r4 = int(tor[1].strip().split('-')[1])
-                for ticket in range(0, len(nearbyTicket)):
-                    val = int(nearbyTicket[ticket][i])
-                    if r1 <= val <= r2 or r3 <= val <= r4:
-                        fieldRule[r]=rule[r]
+    columnMatch = []
+    ruleTemp = rule.copy()
+    max = len(ruleTemp)
+    while len(rule) > 0:
+        for r in range (0, max):  
+            print(ruleTemp[r])         
+            for column in range (0, len(nearbyTicket[0])):
+                if not column in columnMatch:
+                    if columnValidator(rules[ruleTemp[r]], column, nearbyTicket):
+                        if column not in columnMatch:
+                            columnMatch.append(column)
+                
+            if len(columnMatch) == 1:
+                fieldRule[columnMatch[0]] = ruleTemp[r]
+                rule.pop(r)
+                ruleTemp = rule.copy()
+                max = len(ruleTemp)
+            else:
+                del columnMatch[:]
 
-    return fieldRule
 
 if __name__ == "__main__":
     main()
